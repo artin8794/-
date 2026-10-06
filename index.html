@@ -1,190 +1,123 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سایت بازی | مار 🐍</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family:'Vazirmatn', sans-serif; }
-  body {
-    min-height:100vh;
-    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-    color:#fff; display:flex; flex-direction:column; align-items:center;
-  }
-  header {
-    width:100%; padding:20px; text-align:center;
-    background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
-    border-bottom:1px solid rgba(255,255,255,0.1);
-  }
-  header h1 { font-size:2rem; font-weight:900;
-    background: linear-gradient(90deg,#00f5a0,#00d9f5);
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  }
-  header p { color:#aaa; margin-top:8px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>چالش رمز عبور</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --bg: #1e1e2e;
+            --surface: #2d2d44;
+            --text: #a6adc8;
+            --white: #cdd6f4;
+        }
 
-  .game-card {
-    margin-top:40px; padding:30px; border-radius:24px;
-    background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align:center;
-  }
-  .scores { display:flex; gap:16px; justify-content:center; margin-bottom:20px; }
-  .score-box {
-    background:rgba(0,245,160,0.1); border:1px solid rgba(0,245,160,0.3);
-    padding:10px 24px; border-radius:14px; font-size:1.1rem;
-  }
-  .score-box span { color:#00f5a0; font-weight:900; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tahoma', sans-serif; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-  canvas {
-    background:#0a0a1a; border-radius:16px; border:2px solid rgba(0,245,160,0.4);
-    box-shadow: 0 0 30px rgba(0,245,160,0.15);
-  }
+        .container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-  .btn {
-    margin-top:20px; padding:12px 36px; font-size:1.1rem; font-weight:700;
-    border:none; border-radius:12px; cursor:pointer; color:#0a0a1a;
-    background: linear-gradient(90deg,#00f5a0,#00d9f5);
-    transition: transform .2s, box-shadow .2s;
-  }
-  .btn:hover { transform:scale(1.05); box-shadow:0 0 20px rgba(0,245,160,0.5); }
+        h1 { 
+            color: var(--white); 
+            margin-bottom: 1.5rem; 
+            font-size: 1.5rem; 
+        }
 
-  .controls { display:none; margin-top:20px; grid-template-columns:repeat(3,60px); gap:8px; justify-content:center; }
-  .controls button {
-    width:60px; height:60px; font-size:1.5rem; border-radius:12px; border:none;
-    background:rgba(255,255,255,0.1); color:#fff; cursor:pointer;
-  }
-  .controls button:active { background:rgba(0,245,160,0.4); }
-  @media (max-width:600px){ .controls{display:grid} canvas{width:300px;height:300px} }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            background: var(--bg);
+            color: var(--white);
+            outline: none;
+            transition: 0.3s;
+            text-align: center;
+        }
 
-  .overlay {
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:12px;
-    background:rgba(10,10,26,0.85); border-radius:16px; font-size:1.5rem; font-weight:900;
-  }
-  .canvas-wrap { position:relative; }
-  .hidden { display:none; }
+        input:focus { border-color: var(--primary); }
 
-  footer { margin-top:auto; padding:20px; color:#888; font-size:.9rem; }
-</style>
+        button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .error { color: #f38ba8; margin-top: 1rem; display: none; font-size: 0.9rem; }
+        
+        /* صفحه دوم */
+        #page2 { display: none; }
+        
+        .result-text {
+            font-size: 1.2rem;
+            color: var(--white);
+            margin-top: 1rem;
+            line-height: 1.8;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-  <h1>🎮 سایت بازی آزمایشی</h1>
-  <p>با کیبورد یا دکمه‌ها مار رو کنترل کن و سیب‌ها رو بخور!</p>
-</header>
-
-<div class="game-card">
-  <div class="scores">
-    <div class="score-box">امتیاز: <span id="score">0</span></div>
-    <div class="score-box">رکورد: <span id="highScore">0</span></div>
-  </div>
-
-  <div class="canvas-wrap">
-    <canvas id="game" width="400" height="400"></canvas>
-    <div class="overlay" id="overlay">
-      <div id="overlayText">آماده‌ای؟ 🐍</div>
-      <button class="btn" onclick="startGame()">شروع بازی</button>
+    <!-- صفحه اول -->
+    <div class="container" id="page1">
+        <h1>🔐 چالش رمز عبور</h1>
+        <p style="margin-bottom: 1rem;">اگه رمز رو پیدا کنی برنده ای</p>
+        <input type="password" id="passInput" placeholder="رمز عبور..." onkeypress="if(event.key==='Enter') checkAuth()">
+        <button onclick="checkAuth()">بررسی رمز</button>
+        <p class="error" id="errorMsg">❌ رمز اشتباه است!</p>
     </div>
-  </div>
 
-  <div class="controls">
-    <div></div><button onclick="setDir(0,-1)">⬆️</button><div></div>
-    <button onclick="setDir(1,0)">➡️</button>
-    <button onclick="setDir(0,1)">⬇️</button>
-    <button onclick="setDir(-1,0)">⬅️</button>
-  </div>
-</div>
+    <!-- صفحه دوم -->
+    <div class="container" id="page2">
+        <h1>نتیجه چالش:</h1>
+        <div class="result-text">
+            تو رضا گلزار شدی 🗿🚬<br>
+            برای باطل شدن عکس بگیر بفرست پیوی
+        </div>
+        <button onclick="location.reload()" style="margin-top: 2rem; background: #45475a;">بازگشت</button>
+    </div>
 
-<footer>ساخته شده با ❤️ — سایت آزمایشی</footer>
+    <script>
+        const CORRECT_PASS = "01010100";
 
-<script>
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
-const grid = 20, cells = canvas.width / grid;
-let snake, dir, nextDir, food, score, loop;
-let highScore = localStorage.getItem('snakeHigh') || 0;
-document.getElementById('highScore').textContent = highScore;
-
-function startGame(){
-  snake = [{x:10,y:10}];
-  dir = {x:1,y:0}; nextDir = dir;
-  score = 0;
-  document.getElementById('score').textContent = 0;
-  placeFood();
-  document.getElementById('overlay').classList.add('hidden');
-  clearInterval(loop);
-  loop = setInterval(update, 120);
-}
-
-function placeFood(){
-  do {
-    food = { x: Math.floor(Math.random()*cells), y: Math.floor(Math.random()*cells) };
-  } while (snake.some(s => s.x===food.x && s.y===food.y));
-}
-
-function setDir(x,y){
-  if (x === -dir.x && y === -dir.y) return; // جلوگیری از حرکت معکوس
-  nextDir = {x,y};
-}
-
-document.addEventListener('keydown', e => {
-  const keys = {
-    'ArrowUp':[0,-1],'ArrowDown':[0,1],'ArrowRight':[1,0],'ArrowLeft':[-1,0],
-    'w':[0,-1],'s':[0,1],'d':[1,0],'a':[-1,0]
-  };
-  if (keys[e.key]) setDir(...keys[e.key]);
-});
-
-function update(){
-  dir = nextDir;
-  const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-
-  // برخورد با دیوار یا بدن
-  if (head.x<0 || head.y<0 || head.x>=cells || head.y>=cells ||
-      snake.some(s => s.x===head.x && s.y===head.y)) {
-    return gameOver();
-  }
-
-  snake.unshift(head);
-  if (head.x===food.x && head.y===food.y){
-    score++;
-    document.getElementById('score').textContent = score;
-    placeFood();
-  } else {
-    snake.pop();
-  }
-  draw();
-}
-
-function draw(){
-  ctx.fillStyle = '#0a0a1a';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // سیب
-  ctx.fillStyle = '#ff4757';
-  ctx.beginPath();
-  ctx.arc(food.x*grid+grid/2, food.y*grid+grid/2, grid/2-2, 0, Math.PI*2);
-  ctx.fill();
-
-  // مار
-  snake.forEach((s,i) => {
-    ctx.fillStyle = i===0 ? '#00f5a0' : `hsl(160, 90%, ${55 - i*2}%)`;
-    ctx.fillRect(s.x*grid+1, s.y*grid+1, grid-2, grid-2);
-  });
-}
-
-function gameOver(){
-  clearInterval(loop);
-  if (score > highScore){
-    highScore = score;
-    localStorage.setItem('snakeHigh', highScore);
-    document.getElementById('highScore').textContent = highScore;
-  }
-  document.getElementById('overlayText').innerHTML = `💥 باختی!<br>امتیاز: ${score}`;
-  document.getElementById('overlay').classList.remove('hidden');
-}
-</script>
-
+        function checkAuth() {
+            const input = document.getElementById('passInput').value;
+            const errorMsg = document.getElementById('errorMsg');
+            
+            if (input === CORRECT_PASS) {
+                document.getElementById('page1').style.display = 'none';
+                document.getElementById('page2').style.display = 'block';
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('passInput').value = '';
+            }
+        }
+    </script>
 </body>
 </html>
